@@ -1,0 +1,211 @@
+body {
+  background: url(imgs/bg1.jpeg);
+}
+@keyframes running {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.app .app-player {
+  width: 800px;
+  margin: 0 auto;
+}
+.app .app-player .app-player-search {
+  position: relative;
+  height: 75px;
+  background-color: #1BAAD5;
+  padding: 0 5px;
+}
+.app .app-player .app-player-search .title {
+  font-size: 18px;
+  float: left;
+  color: white;
+  line-height: 75px;
+}
+.app .app-player .app-player-search input {
+  float: right;
+  width: 300px;
+  height: 30px;
+  outline: none;
+  border-radius: 20px;
+  margin-top: 20px;
+  padding-left: 20px;
+  box-sizing: border-box;
+}
+.app .app-player .app-player-search i {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: url(imgs/zoom.png);
+  position: absolute;
+  right: 15px;
+  top: 30px;
+  cursor: pointer;
+}
+.app .app-player .app-content {
+  position: relative;
+  height: 480px;
+  background-color: #ffffff80;
+}
+.app .app-player .app-content .music-list {
+  position: relative;
+  width: 200px;
+  height: 100%;
+  float: left;
+  overflow: auto;
+  background-color: yellowgreen;
+  line-height: 25px;
+}
+.app .app-player .app-content .music-list .list-item {
+  height: 30px;
+  background-color: greenyellow;
+  padding-left: 10px;
+  cursor: pointer;
+}
+.app .app-player .app-content .music-list .list-item .play-icon {
+  float: left;
+  width: 23px;
+  height: 25px;
+  background: url(imgs/table.png) -20px;
+}
+.app .app-player .app-content .music-list .list-item .music-mv {
+  float: right;
+  width: 24px;
+  height: 20px;
+  background: url(imgs/table.png) 0 22px;
+  padding-top: 4px;
+  margin-right: 10px;
+}
+.app .app-player .app-content .music-list .list-item li {
+  width: 110px;
+  line-height: 30px;
+  text-align: center;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  float: left;
+}
+.app .app-player .app-content .music-list .list-item li:hover {
+  color: red;
+}
+.app .app-player .app-content .music-list .list-item .hidden {
+  display: none;
+}
+.app .app-player .app-content .music-player {
+  position: relative;
+  width: 400px;
+  height: 100%;
+  float: left;
+}
+.app .app-player .app-content .music-player .disc {
+  width: 255px;
+  height: 255px;
+  position: absolute;
+  background: url(imgs/disc.png);
+  top: 100px;
+  left: 80px;
+}
+.app .app-player .app-content .music-player .disc .player-bgImg {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  top: calc(50% - 75px);
+  left: calc(50% - 75px);
+  z-index: -1;
+}
+.app .app-player .app-content .music-player .player-bar {
+  position: absolute;
+  width: 92px;
+  height: 128px;
+  background: url(imgs/player_bar.png);
+  z-index: 2;
+  left: calc(50% - 46px);
+  transform: rotate(-25deg);
+}
+.app .app-player .app-content .music-player .barPlaying {
+  transform: rotate(0deg);
+}
+.app .app-player .app-content .music-player .autorotate {
+  animation-name: running;
+  animation-duration: 5s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.app .app-player .app-content .user-comment {
+  width: 200px;
+  height: 100%;
+  float: left;
+  overflow: auto;
+  overflow-x: hidden;
+}
+.app .app-player .app-content .user-comment .comment-list {
+  padding: 5px;
+  background-color: white;
+  overflow: hidden;
+}
+.app .app-player .app-content .user-comment .comment-list .user-img {
+  width: 30px;
+  height: 34px;
+  float: left;
+}
+.app .app-player .app-content .user-comment .comment-list .user-img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+.app .app-player .app-content .user-comment .comment-list .comment-content {
+  margin-left: 10px;
+  box-sizing: border-box;
+  padding: 0 10px 0 20px;
+}
+.app .app-player .app-content .user-comment .comment-list .comment-content .uesrname {
+  font-size: 16px;
+  margin-left: 10px;
+  color: #0C73C2;
+}
+.app .app-player .app-content .user-comment .comment-list .comment-content .content {
+  font-size: 12px;
+  color: black;
+}
+.app .app-player .app-player-footer .musicAudio {
+  width: 100%;
+}
+.app .app-player .app-player-footer .musicAudio audio {
+  width: 100%;
+}
+.app .app-player .app-player-footer .video-box video {
+  transform: translate(-50%, -50%);
+  left: 50%;
+  height: 800px;
+  width: 600px;
+  position: fixed;
+  z-index: 999;
+  top: 40%;
+  outline: none;
+}
+.app .app-player .app-player-footer .video-box .vedio-close {
+  position: fixed;
+  color: white;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+}
+.app .app-player .app-player-footer .video-box .video-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  opacity: 1;
+  background-color: black;
+  z-index: 888;
+}
+li {
+  list-style: none;
+}

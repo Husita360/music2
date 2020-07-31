@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>AweiMusic</title>
+        <link rel="stylesheet" href="./index.css">
+    </head>
+    <body>
+        <div class="app">
+            <!-- 播放器 -->
+            <div class="app-player">
+                <!-- 头部 -->
+                <div class="app-player-search">
+                    <div class="title">AweiMusic</div>
+                    <input type="text" v-model="keywords" @keyup.enter.stop="musicSearch">
+                    <i @click="musicSearch"></i>
+                </div>
+                <!-- 主体内容 -->
+                <div class="app-content">
+                    <div class="music-list">
+                        <div v-for="item,index of songs" :key="index" class="list-item">
+                            <i class="play-icon" @click ="playAudio(item.id)"></i>
+                            <li @click="playAudio(item.id)">{{item.name}}</li>
+                            <div :class="['music-mv',{hidden:item.mvid==0}]" @click="playMv(item.mvid)"></div>
+                        </div>
+                    </div>
+                    <!-- 音乐转盘 -->
+                    <div class="music-player">
+                        <div :class="['disc',{autorotate:isPlayAudio}]">
+                            <img :src="bgImg" alt="" class="player-bgImg">
+                           
+                        </div>
+                        <div :class="['player-bar',{barPlaying:isPlayAudio}]"></div>
+                        
+                    </div>
+                    <!-- 热门评论 -->
+                    <div class="user-comment">
+                        <div class="title">
+                            热门留言
+                        </div>
+                        <div class="comment-list" v-for="item,index of hotwords" :key="index">
+                            <div class="user-img">
+                                <img :src="item.user.avatarUrl" alt="">
+                            </div>
+                            <div class="comment-content">
+                                <div class="uesrname">
+                                  {{item.user.nickname}}
+                                </div>
+                                <div class="content">
+                                    {{item.content}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="app-player-footer">
+                    <!-- 音频 -->
+                    <div class="musicAudio">
+                        <audio ref="audio" @play="play" @pause="pause" src="" :src="musicUrl" controls loop ></audio>
+                    </div>
+                    <!-- 视频 -->
+                    <div class="video-box" v-show="isMvPlaying">
+                        <div class="vedio-close" @click="closeMV">X</div>
+                       <video ref="video" :src="videoUrl" controls autoplay loop></video>
+                       <div class="video-mask"></div>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+
+      
+    </body>
+    <script src="./js/axios.min.js"></script>
+    <script src="./js/vue.js"></script>
+    <script src="./js/common.js"></script>
+    <script>
+        let app =new Vue({
+            el:".app",
+            data:{
+                keywords:"",
+                bgImg:"",
+                songs:[],
+                hotwords:[],
+                musicUrl:"",
+                imgUrl:"",
+                videoUrl:"",
+                isPlayAudio:false,
+                isMvPlaying:false,
+                
+            
+            },
+            // 挂载自动加载数据
+           mounted(){
+                Axios.get("https://apimusic.linweiqin.com/search",{
+                    params:{keywords:"热门"}
+                }).then(res =>{
+                    this.songs = res.result.songs
+                    this.isAudioPlaying = true;
+                    let id = this.songs[0].id;
+
+                      // 获取歌曲
+                    Axios.get('https://apimusic.linweiqin.com/song/url',{
+                        params:{id:id}
+                    }).then(res=>{
+                       this.musicUrl = res.data[0].url;
+                       console.log(res.data[0].url);
+                    }),
+
+                     // 热门评论
+                Axios.get('https://apimusic.linweiqin.com/comment/hot?type=0',{
+                    params:{id:id}
+                }).then(res =>{
+                   this.hotwords = res.hotComments
+                    
+                }),
+                // 获取封面
+               Axios.get('https://apimusic.linweiqin.com/song/detail',{
+                        params:{ids:id}
+                    }).then(res=>{
+                        this.bgImg=res.songs[0].al.picUrl;
+                    })
+    
+            })
+        },
+            methods:{
+                // 搜索歌曲
+                musicSearch:function(){
+                    let _this=this;
+                   var songs =this.songs
+                   Axios.get('https://apimusic.linweiqin.com/search',{
+                       params:{keywords:this.keywords }
+                }).then(res =>{
+                   _this.songs = res.result.songs
+                //    console.log(res.result);
+                })
+                },
+                playAudio:function(id){
+                    Axios.get('https://apimusic.linweiqin.com/song/url',{
+                        params:{id:id}
+                    }).then(res=>{
+                       this.musicUrl = res.data[0].url;
+                    //    console.log(res.data[0].url);
+                    })
+                    Axios.get('https://apimusic.linweiqin.com/song/detail',{
+                        params:{ids:id}
+                    }).then(res=>{
+                        this.bgImg=res.songs[0].al.picUrl;
+                    }),
+                    Axios.get('https://apimusic.linweiqin.com/comment/hot?type=0',{
+                    params:{id:id}
+                }).then(res =>{
+                   this.hotwords = res.hotComments
+                    
+                })
+                },
+                // 播放mv
+                playMv:function(mvid){
+                    Axios.get('https://apimusic.linweiqin.com/mv/url',{
+                        params:{id:mvid}
+                    }).then(res =>{
+                        console.log(res.data.url);
+                        this.videoUrl = res.data.url;
+                        // 停止播放音频
+                        this.isPlayAudio = false;
+                        this.$refs.audio.pause();
+                        this.isMvPlaying = true;
+                    })
+                },
+                // 播放和 停止
+                play: function () {
+                     this.isPlayAudio = true;
+                },
+                pause: function () {
+                    this.isPlayAudio = false;
+                },
+                closeMV: function () {
+                this.$refs.video.pause();
+                this.isMvPlaying = false;
+            },
+            }
+        })
+    </script>
+<html>
